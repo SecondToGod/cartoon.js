@@ -1,5 +1,5 @@
 # cartoon.js
-an animation frame for your web based on canvas
+an animation frame for your web based on canvas</br>
 cartoon.js是一个Web和Html5的图形动画库，目前仍处于开发阶段。</br>
 developer:</br>
 	Chinese Academy Of Sciences:</br>
