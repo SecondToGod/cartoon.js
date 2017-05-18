@@ -1,8 +1,7 @@
-<script type="text/javascript">
-	var line = document.getElementById('line');
-	var context = line.getContext('2d');
-	line.width = 800;
-	line.height = 600;
+	// var line = document.getElementById('line');
+	// var context = line.getContext('2d');
+	// line.width = 800;
+	// line.height = 600;
 
 	//渐变
 	//context.beginPath();
@@ -137,7 +136,7 @@
 			updateLight(line,circleLight);
 		},40);*/
 	//随机小球运动
-	randomCircle(line,70);
+	//drawRandomCircle(line,70);
 
 	//drawMoon(context,650,90,1,68,20,1,'bevel','#fb5','#fb5');
 	//drawLand(context,1,'','');
@@ -246,12 +245,12 @@
 	function dist(x1,y1,x2,y2){
 		return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
 	}
-	function randomCircle(canvas,num){
+	function drawRandomCircle(canvas,num){
 		var cxt = canvas.getContext('2d');
 		var balls = [];
 		var canvasW = canvas.width,canvasH = canvas.height;
 		cxt.globalAlpha = 0.8;
-		context.globalCompositeOperation = 'xor';
+		cxt.globalCompositeOperation = 'xor';
 		for(var j=0;j<num;j++){
 			var R = Math.floor(Math.random()*255);
 			var G = Math.floor(Math.random()*255);
@@ -311,14 +310,14 @@
 		}
 		cxt.restore();
 	}
-	function detect(canvas,event){
-		var cxt = canvas.getContext('2d');
-		var x = event.clientX - canvas.getBoundingClientRect().left;//
-		var y = event.clientY - canvas.getBoundingClientRect().top;//获取点击坐标
-		if(cxt.isPointInPath(x,y)){//交互
-			cxt.fill();
-		}//判断是否在点击区域
-	}
+	// function detect(canvas,event){
+	// 	var cxt = canvas.getContext('2d');
+	// 	var x = event.clientX - canvas.getBoundingClientRect().left;//
+	// 	var y = event.clientY - canvas.getBoundingClientRect().top;//获取点击坐标
+	// 	if(cxt.isPointInPath(x,y)){//交互
+	// 		cxt.fill();
+	// 	}//判断是否在点击区域
+	// }
 	function drawSearchLight(canvas,searchLight){
 		var cxt = canvas.getContext('2d');
 		var canvasW = canvas.width,canvasH = canvas.height;
@@ -336,7 +335,7 @@
 
 		cxt.font = "bold 50px Arial";
 		cxt.fillStyle = "#058";
-		cxt.fillText('hello canvas!',line.width/2,line.height/2);
+		cxt.fillText('hello cartoon.js!',line.width/2,line.height/2);
 		cxt.restore();
 	}
 	function updateLight(canvas,searchLight){
@@ -430,4 +429,3 @@
 		}	
 		init();
 	}
-</script>
