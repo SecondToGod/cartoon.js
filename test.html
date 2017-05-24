@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>cartoon.js</title>
-        <script type="text/javascript" src="./cartoon.min.js"></script> 
+        <script type="text/javascript" src="./cartoon.build.js"></script> 
     </head>
     <body>
         <canvas id="mycanvas" style='display:block;margin:50px auto;border:1px solid #eee'></canvas>   
@@ -11,19 +11,24 @@
 <script>
 window.onload = function(){
     var mycanvas = document.getElementById('mycanvas');
-    mycanvas.width = 700;
-    mycanvas.height = 600;
-    //drawRandomCircles(mycanvas,70);
+    mycanvas.width = 1000;
+    mycanvas.height = 800;
+    //drawRandomBalls(mycanvas,10);
     //drawStar(mycanvas,200,200,30,50);
     //drawRect(mycanvas,10,10,200,200);
     //drawRoundRect(mycanvas,100,100,300,300,60);
     //drawMoon(mycanvas,400,300,0.6,100);
     //drawLand(mycanvas);
-	//var circleLight = {x:100,y:100,Vx:Math.random()*5+5,Vy:Math.random()*5+5,radius:70};
+	//var circleLight = [{x:100,y:100,vx:Math.random()*5+5,vy:Math.random()*5+5,radius:70}];
     //drawSearchLight(mycanvas,circleLight);
     //drawLine(mycanvas,0,0,700,600);
     //drawRiver(mycanvas);
+<<<<<<< HEAD
     //linkTo(mycanvas,0,0,300,500,3);
     drawParticle(mycanvas);
+=======
+    //linkTo(mycanvas,0,0,300,500);
+    jetParticles(mycanvas,250,3,'gray',10,40,{x:300,y:400,radius:20});
+>>>>>>> 7e1ede99410832e4e1b75955a9cd94a6079f2d11
 };
 </script>
