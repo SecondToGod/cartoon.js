@@ -12,7 +12,16 @@ npm install cartoon
 #use
 drawRandomCircles(mycanvas,num)
 ```
-![examples](./examples/randomCircles.png "example") 
+![examples](./examples/randomCircles.png "example1") 
+```
+drawSearchLight(mycanvas,light)
+```
+![examples](./examples/searchlight.png "example2")
+
+```
+jetParticles(mycanvas,250,3,'gray',10,40,{x:300,y:400,radius:20})
+```
+![examples](./examples/particles.png "example3")
 ---------------------------------------------------
 ##### API文档暑期来补
 ##### 更多用法慢慢探索
