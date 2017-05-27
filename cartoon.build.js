@@ -5,7 +5,7 @@ function draw(cxt,lineWidth,linejoin,borderColor,fillColor){
     cxt.fillStyle = fillColor || "";
     cxt.fill();
     cxt.stroke();
-}
+}//两点连线
 function drawLine(mycanvas,x1,y1,x2,y2){
     var cxt = mycanvas.getContext('2d');
     cxt.moveTo(x1,y1);
@@ -69,7 +69,7 @@ function drawRoundRect(mycanvas,x,y,width,height,radius,lineWidth,linejoin,borde
     cxt.translate(x,y);
     roundRectPath(cxt,width,height,radius);
     draw(cxt,lineWidth,linejoin,borderColor,fillColor);
-}
+}//弧
 function drawArcTo(mycanvas,x0,y0,x1,y1,x2,y2,radius,lineWidth,linejoin,borderColor){
     var cxt = mycanvas.getContext('2d');
     cxt.beginPath();
@@ -99,7 +99,7 @@ function drawMoon(mycanvas,x,y,d,r,rot,lineWidth,linejoin,borderColor,fillColor)
     moonPath2(cxt,d);
     cxt.restore();
     draw(cxt,lineWidth,linejoin,borderColor,fillColor);
-}
+}//山坡
 function drawLand(mycanvas,lineWidth,linejoin,borderColor,fillColor){
     var cxt = mycanvas.getContext('2d');
     cxt.save();
@@ -396,7 +396,7 @@ function particleSystem(obj,particles,num,radius,color,turbulence,life){
                 };
         particles[j] = particle;
     }
-}
+}//运动粒子
 function jetParticles(mycanvas,num,radius,color,turbulence,life,obj){
     var ctx = mycanvas.getContext('2d'),
         turbulence = turbulence || '0',
