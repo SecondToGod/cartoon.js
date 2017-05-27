@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>cartoon.js</title>
-        <script type="text/javascript" src="./cartoon.min.js"></script> 
+        <script type="text/javascript" src="./cartoon.build.js"></script> 
     </head>
     <body>
         <canvas id="mycanvas" style='display:block;margin:50px auto;border:1px solid #eee'></canvas>   
@@ -13,7 +13,7 @@ window.onload = function(){
     var mycanvas = document.getElementById('mycanvas');
     mycanvas.width = 1000;
     mycanvas.height = 800;
-    drawRandomBalls(mycanvas,100);
+    //drawRandomBalls(mycanvas,100);
     //drawStar(mycanvas,200,200,30,50);
     //drawRect(mycanvas,10,10,200,200);
     //drawRoundRect(mycanvas,100,100,300,300,60);
@@ -24,5 +24,6 @@ window.onload = function(){
     //drawLine(mycanvas,0,0,700,600);
     //drawRiver(mycanvas);
     //linkTo(mycanvas,0,0,300,500,3);
-    //jetParticles(mycanvas,150,3,'gray',10,40,{x:300,y:400,radius:20});
+    jetParticles(mycanvas,150,3,'gray',10,40,{x:300,y:400,radius:20});
+	}
 </script>

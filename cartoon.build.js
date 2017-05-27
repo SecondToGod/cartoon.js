@@ -172,7 +172,7 @@ function updateObj(mycanvas,objArrary){
 function drawBalls(mycanvas,objArrary){
     var len = objArrary.length,
     cxt = mycanvas.getContext('2d');
-    cxt.clearRect(0,0,mycanvasW,mycanvasH);  
+    cxt.clearRect(0,0,mycanvas.width,mycanvas.height);  
     for(var i=0;i<len;i++){
         drawParticle(mycanvas,objArrary[i].x,objArrary[i].y,objArrary[i].radius,objArrary[i].color);
         for(var k=0;k!=i;k++){
