@@ -164,7 +164,6 @@ function drawRandomBalls(mycanvas,num){
                 radius: Math.random()*2+3,
                 x: Math.random()*mycanvasW,
                 y: Math.random()*mycanvasH,
-                //color: "rgb("+R+","+G+','+B+')',
                 color: randomColor(),
                 vx: Math.random()*2+0.5,
                 vy: Math.random()*2+0.5
@@ -434,7 +433,7 @@ function getImgData(mycanvas,text,size,x,y){
     ctx.font = size +'px Arial';
     ctx.fillStyle = 'rgba(0,0,0,1)';
     ctx.fillText(text,x,y);
-    var img = ctx.getImageData(0,0,canW,canH);//直接取了整个Canvas
+    var img = ctx.getImageData(0,0,canW,canH);//直接取整个Canvas
     ctx.clearRect(0,0,canW,canH);
     for(var x=0;x<img.height;x+= 10){//每隔3像素取一点
         for(var y=0;y<img.width;y+= 10){//每隔3像素取一点
@@ -502,12 +501,12 @@ function img2Pixel(mycanvas,text,size,x,y,radius){
     //             }
     //         }
     //     },60);
-    if(flag){
+    /* if(flag){
         for(var k=0;k<len;++k){
             ctx.beginPath();    
             ctx.arc(_dots[k].tx,_dots[k].ty,radius,0,Math.PI*2,true);
             ctx.fillStyle = _dots[k].color;
             ctx.fill();
         }
-    }
+    } */
 }
