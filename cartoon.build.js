@@ -12,6 +12,39 @@ function drawLine(mycanvas,x1,y1,x2,y2){
     cxt.lineTo(x2,y2);
     draw(cxt,0.5,'round','#ccc');
 }
+//连线动画
+function linkTo(mycanvas,x1,y1,x2,y2){
+    var ctx = mycanvas.getContext('2d');
+        ctx.beginPath(); 
+        ctx.moveTo(x1,y1);
+    var k = (y2-y1)/(x2-x1);    
+    var tick = setInterval(function(){
+        console.log(x1,x2);
+        if(k>0){
+            if(x1 < x2){
+                ctx.lineTo(x1+=1,y1+=k);
+            }else{
+                ctx.lineTo(x1-=1,y1-=k);
+            }
+        }else{
+            if(x1 < x2){
+                ctx.lineTo(x1+=1,y1+=k);
+            }else{
+                ctx.lineTo(x1-=1,y1-=k);
+            }
+        }
+        ctx.stroke();
+        if(x1 === x2){
+            clearInterval(tick);
+        }         
+    },50);
+}//随机颜色
+function randomColor(){
+   var R = Math.floor(Math.random()*255),
+       G = Math.floor(Math.random()*255),
+       B = Math.floor(Math.random()*255);
+    return 'rgb('+R+','+G+','+B+')';   
+}
 //画矩形
 function drawRect(mycanvas,x,y,width,height){
     var cxt = mycanvas.getContext('2d');
@@ -127,17 +160,15 @@ function drawRandomBalls(mycanvas,num){
     cxt.globalAlpha = 0.6;
     cxt.globalCompositeOperation = 'xor';
     for(var j=0;j<num;j++){
-        var R = Math.floor(Math.random()*255),
-         G = Math.floor(Math.random()*255),
-         B = Math.floor(Math.random()*255),
          aBall = {
-                    radius: Math.random()*2+3,
-                    x: Math.random()*mycanvasW,
-                    y: Math.random()*mycanvasH,
-                    color: "rgb("+R+","+G+','+B+')',
-                    vx: Math.random()*2+0.5,
-                    vy: Math.random()*2+0.5
-                    };
+                radius: Math.random()*2+3,
+                x: Math.random()*mycanvasW,
+                y: Math.random()*mycanvasH,
+                //color: "rgb("+R+","+G+','+B+')',
+                color: randomColor(),
+                vx: Math.random()*2+0.5,
+                vy: Math.random()*2+0.5
+                };
         balls[j] = aBall;
     }
     //mycanvas.addEventListener('click',detect);
@@ -172,7 +203,7 @@ function updateObj(mycanvas,objArrary){
 function drawBalls(mycanvas,objArrary){
     var len = objArrary.length,
     cxt = mycanvas.getContext('2d');
-    cxt.clearRect(0,0,mycanvasW,mycanvasH);  
+    cxt.clearRect(0,0,mycanvas.width,mycanvas.height);  
     for(var i=0;i<len;i++){
         drawParticle(mycanvas,objArrary[i].x,objArrary[i].y,objArrary[i].radius,objArrary[i].color);
         for(var k=0;k!=i;k++){
@@ -323,34 +354,6 @@ function riverFlowing(mycanvas,riverH,lineWidth,linejoin,borderColor,fillColor){
     landstyle.addColorStop(1,'#04f');
     draw(cxt,lineWidth,linejoin,'#07f',landstyle);
 }
-//连线动画
-var cartoon = {};
-function linkTo(mycanvas,x1,y1,x2,y2){
-    var ctx = mycanvas.getContext('2d');
-        ctx.beginPath(); 
-        ctx.moveTo(x1,y1);
-    var k = (y2-y1)/(x2-x1);    
-    var tick = setInterval(function(){
-        console.log(x1,x2);
-        if(k>0){
-            if(x1 < x2){
-                ctx.lineTo(x1+=1,y1+=k);
-            }else{
-                ctx.lineTo(x1-=1,y1-=k);
-            }
-        }else{
-            if(x1 < x2){
-                ctx.lineTo(x1+=1,y1+=k);
-            }else{
-                ctx.lineTo(x1-=1,y1-=k);
-            }
-        }
-        ctx.stroke();
-        if(x1 === x2){
-            clearInterval(tick);
-        }         
-    },50);
-}
 //粒子系统
 function drawParticle(ctx,x,y,radius,fillColor){
     var ctx = mycanvas.getContext('2d');
@@ -366,11 +369,11 @@ function updateParticles(particles,obj,radius,turbulence,life){
         temp.x += temp.vx;
         temp.y += temp.vy;
         temp.life -= 1;
-        temp.radius = temp.radius>2?temp.radius-=0.4:3;
+        temp.radius = (temp.radius>2)?(temp.radius-=0.4):3;
         //加速度
         // temp.vy -= temp.vy*0.1;
         // temp.vx -= temp.vx*0.1;
-        if(temp.life === 0 || dist(temp.x,temp.y,obj.x,obj.y)>200){
+        if(temp.life === 0 || dist(temp.x,temp.y,obj.x,obj.y)>300){
             particles.splice(i,1);
             particles.push({
                 radius: Math.random()*turbulence*0.7 + radius,
@@ -417,5 +420,94 @@ function jetParticles(mycanvas,num,radius,color,turbulence,life,obj){
         }
         updateParticles(particles,obj,radius,turbulence,life);
     },60);
-    if(particles.length > 500) clearInterval(tock);
+    if(particles.length > num) clearInterval(tock);
+}
+//分形树
+
+//粒子轮廓动画
+function getImgData(mycanvas,text,size,x,y){
+    var ctx = mycanvas.getContext('2d'),
+        canW = mycanvas.width,
+        canH = mycanvas.height,
+        dots = [];
+    ctx.beginPath();
+    ctx.font = size +'px Arial';
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    ctx.fillText(text,x,y);
+    var img = ctx.getImageData(0,0,canW,canH);//直接取了整个Canvas
+    ctx.clearRect(0,0,canW,canH);
+    for(var x=0;x<img.height;x+= 10){//每隔3像素取一点
+        for(var y=0;y<img.width;y+= 10){//每隔3像素取一点
+            var i = (y + x*img.width)*4;//获取每个像素点在img.data数组中的首地址
+            var dot = {
+                x:0,
+                y:0
+            };
+            if(img.data[i+3]>= 128){
+                dot.x = y;
+                dot.y = x;
+                dots.push(dot);
+            }
+        }
+    }
+    return dots;
+}
+function img2Pixel(mycanvas,text,size,x,y,radius){
+    var dots = getImgData(mycanvas,text,size,x,y),
+        ctx = mycanvas.getContext('2d'),
+        len = dots.length,
+        canW = mycanvas.width,
+        canH = mycanvas.height,
+        radius = radius || 1,
+        _dots = new Array(len),
+        direction = new Array(len),
+        kl = new Array(len);
+         for(var k=0;k<len;++k){
+            ctx.beginPath();    
+            ctx.arc(dots[k].x,dots[k].y,radius,0,Math.PI*2,true);
+            ctx.fillStyle = 'black';
+            ctx.fill();
+        }
+    // for(var n=0;n<len;++n){
+    //      _dots[n] = {
+    //             x: (Math.random()<0.5)? 0 : canW,
+    //             y: canH * Math.random(),
+    //             color: "rgb("+R+","+G+','+B+')',
+    //             tx: dots[n].x,
+    //             ty: dots[n].y
+    //      }; 
+    //      direction[n] = (_dots[n].x === 0)?1:-1;
+    //      kl[n]=  (_dots[n].ty - _dots[n].y)/(_dots[n].tx - _dots[n].x);
+    //      console.log(_dots[n]);
+    // }
+    // var count = 0,
+    //     flag = false, //粒子是否继续运动标志
+    //     tick = setInterval(function(){    
+    //         ctx.clearRect(0,0,canW,canH);
+    //         for(var m=0;m<len;++m){ 
+    //             ctx.beginPath();    
+    //             ctx.arc(_dots[m].x,_dots[m].y,radius,0,Math.PI*2,true);
+    //             ctx.fillStyle = _dots[m].color ;
+    //             ctx.fill();
+    //             if(count === len){
+    //                 alert(1);
+    //                 flag = true;
+    //                 clearInterval(tick);
+    //             }
+    //             if(dist(_dots[m],dots[m])<20){
+    //                 count++;
+    //             }else {
+    //                  _dots[m].x += 8*direction[m];
+    //                  _dots[m].y += kl[m]*8;
+    //             }
+    //         }
+    //     },60);
+    if(flag){
+        for(var k=0;k<len;++k){
+            ctx.beginPath();    
+            ctx.arc(_dots[k].tx,_dots[k].ty,radius,0,Math.PI*2,true);
+            ctx.fillStyle = _dots[k].color;
+            ctx.fill();
+        }
+    }
 }
