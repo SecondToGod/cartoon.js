@@ -13,28 +13,27 @@ function drawLine(mycanvas,x1,y1,x2,y2){
     draw(cxt,0.5,'round','#ccc');
 }
 //连线动画
-function linkTo(mycanvas,x1,y1,x2,y2){
+function linkTo(mycanvas,x1,y1,x2,y2,speed){
     var ctx = mycanvas.getContext('2d');
         ctx.beginPath(); 
         ctx.moveTo(x1,y1);
     var k = (y2-y1)/(x2-x1);    
     var tick = setInterval(function(){
-        console.log(x1,x2);
         if(k>0){
             if(x1 < x2){
-                ctx.lineTo(x1+=1,y1+=k);
+                ctx.lineTo(x1+=speed,y1+=k*speed);
             }else{
-                ctx.lineTo(x1-=1,y1-=k);
+                ctx.lineTo(x1-=speed,y1-=k*speed);
             }
         }else{
             if(x1 < x2){
-                ctx.lineTo(x1+=1,y1+=k);
+                ctx.lineTo(x1+=speed,y1+=k*speed);
             }else{
-                ctx.lineTo(x1-=1,y1-=k);
+                ctx.lineTo(x1-=speed,y1-=k*speed);
             }
         }
         ctx.stroke();
-        if(x1 === x2){
+        if(x1 === x2 && y1 === y2){
             clearInterval(tick);
         }         
     },50);
@@ -333,6 +332,7 @@ function drawRiver(mycanvas,lineWidth,linejoin,borderColor,fillColor){
     var tick = setInterval(function(){
         riverH -= 10; 
         riverFlowing(mycanvas,riverH,lineWidth,linejoin,borderColor,fillColor);
+        if (riverH === -20) clearInterval(tick);
     },50);
 }
 function riverFlowing(mycanvas,riverH,lineWidth,linejoin,borderColor,fillColor){
@@ -349,9 +349,10 @@ function riverFlowing(mycanvas,riverH,lineWidth,linejoin,borderColor,fillColor){
     cxt.closePath();
     cxt.restore();
     var landstyle = cxt.createLinearGradient(0,riverH,mycanvasW,mycanvasH);
-    landstyle.addColorStop(0,'#07f');
-    landstyle.addColorStop(1,'#04f');
-    draw(cxt,lineWidth,linejoin,'#07f',landstyle);
+    landstyle.addColorStop(0,'#069');
+    landstyle.addColorStop(0.5,'#06c');
+    landstyle.addColorStop(1,'#06f');
+    draw(cxt,0.5,linejoin,'#007',landstyle);
 }
 //粒子系统
 function drawParticle(ctx,x,y,radius,fillColor){
@@ -421,8 +422,6 @@ function jetParticles(mycanvas,num,radius,color,turbulence,life,obj){
     },60);
     if(particles.length > num) clearInterval(tock);
 }
-//分形树
-
 //粒子轮廓动画
 function getImgData(mycanvas,text,size,x,y){
     var ctx = mycanvas.getContext('2d'),
@@ -435,14 +434,14 @@ function getImgData(mycanvas,text,size,x,y){
     ctx.fillText(text,x,y);
     var img = ctx.getImageData(0,0,canW,canH);//直接取整个Canvas
     ctx.clearRect(0,0,canW,canH);
-    for(var x=0;x<img.height;x+= 10){//每隔3像素取一点
-        for(var y=0;y<img.width;y+= 10){//每隔3像素取一点
+    for(var x=0;x<img.height;x+= 8){//每隔3像素取一点
+        for(var y=0;y<img.width;y+= 8){//每隔3像素取一点
             var i = (y + x*img.width)*4;//获取每个像素点在img.data数组中的首地址
             var dot = {
                 x:0,
                 y:0
             };
-            if(img.data[i+3]>= 128){
+            if(img.data[i+3]>= 128){//若alpha的值大于128，则选取该点
                 dot.x = y;
                 dot.y = x;
                 dots.push(dot);
@@ -459,54 +458,52 @@ function img2Pixel(mycanvas,text,size,x,y,radius){
         canH = mycanvas.height,
         radius = radius || 1,
         _dots = new Array(len),
-        direction = new Array(len),
         kl = new Array(len);
-         for(var k=0;k<len;++k){
-            ctx.beginPath();    
-            ctx.arc(dots[k].x,dots[k].y,radius,0,Math.PI*2,true);
-            ctx.fillStyle = 'black';
-            ctx.fill();
+    for(var n=0;n<len;++n){
+        _dots[n] = {
+            x: Math.round(Math.random()*canW),
+            y: 0,
+            color: randomColor(),
+            tx: dots[n].x,//目的地x
+            ty: dots[n].y//目的地y
+         };
+         kl[n] = (_dots[n].ty - _dots[n].y)/(_dots[n].tx - _dots[n].x);
+    }
+    var flag = false,
+        start = Date.now();
+        tick = setInterval(function(){   
+            ctx.clearRect(0,0,canW,canH);
+            var tlen = _dots.length;
+            for(var m=0;m<tlen;++m){  
+                ctx.beginPath();    
+                ctx.arc(_dots[m].x,_dots[m].y,radius,0,Math.PI*2);
+                ctx.fillStyle = _dots[m].color ;
+                ctx.fill();             
+                if(dist(_dots[m].x,_dots[m].y,dots[m].x,dots[m].y)<=4){
+                               
+                }else if(kl[m]>0){
+                    _dots[m].x += 5;
+                    _dots[m].y += kl[m]*5;
+                }else{
+                    _dots[m].x -= 5;
+                    _dots[m].y -= 5*kl[m];
+                }              
+            } 
+            var now = Date.now(),
+            delta = now - start;     
+           // console.log(delta);     
+            if(delta > 20000){
+                flag = true;
+                clearInterval(tick);
+            }
+        },60);
+        if(flag){
+             for(var i=0;i<len;++i){ 
+                ctx.beginPath();    
+                ctx.arc(_dots[i].tx,_dots[i].ty,radius,0,Math.PI*2);
+                ctx.fillStyle = _dots[i].color ;
+                ctx.fill();
+             }
         }
-    // for(var n=0;n<len;++n){
-    //      _dots[n] = {
-    //             x: (Math.random()<0.5)? 0 : canW,
-    //             y: canH * Math.random(),
-    //             color: "rgb("+R+","+G+','+B+')',
-    //             tx: dots[n].x,
-    //             ty: dots[n].y
-    //      }; 
-    //      direction[n] = (_dots[n].x === 0)?1:-1;
-    //      kl[n]=  (_dots[n].ty - _dots[n].y)/(_dots[n].tx - _dots[n].x);
-    //      console.log(_dots[n]);
-    // }
-    // var count = 0,
-    //     flag = false, //粒子是否继续运动标志
-    //     tick = setInterval(function(){    
-    //         ctx.clearRect(0,0,canW,canH);
-    //         for(var m=0;m<len;++m){ 
-    //             ctx.beginPath();    
-    //             ctx.arc(_dots[m].x,_dots[m].y,radius,0,Math.PI*2,true);
-    //             ctx.fillStyle = _dots[m].color ;
-    //             ctx.fill();
-    //             if(count === len){
-    //                 alert(1);
-    //                 flag = true;
-    //                 clearInterval(tick);
-    //             }
-    //             if(dist(_dots[m],dots[m])<20){
-    //                 count++;
-    //             }else {
-    //                  _dots[m].x += 8*direction[m];
-    //                  _dots[m].y += kl[m]*8;
-    //             }
-    //         }
-    //     },60);
-    /* if(flag){
-        for(var k=0;k<len;++k){
-            ctx.beginPath();    
-            ctx.arc(_dots[k].tx,_dots[k].ty,radius,0,Math.PI*2,true);
-            ctx.fillStyle = _dots[k].color;
-            ctx.fill();
-        }
-    } */
 }
+//分形树
