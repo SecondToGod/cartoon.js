@@ -450,28 +450,28 @@ function getImgData(mycanvas,text,size,x,y){
     }
     return dots;
 }
-function img2Pixel(mycanvas,text,size,x,y,radius){
+function img2Pixel(mycanvas,text,size,x,y,radius,speed,color){//文字，大小，位置(x,y),粒子半径,速度，颜色
     var dots = getImgData(mycanvas,text,size,x,y),
         ctx = mycanvas.getContext('2d'),
         len = dots.length,
         canW = mycanvas.width,
         canH = mycanvas.height,
         radius = radius || 1,
+        spped = speed || 5,
         _dots = new Array(len),
         kl = new Array(len);
     for(var n=0;n<len;++n){
         _dots[n] = {
             x: Math.round(Math.random()*canW),
             y: 0,
-            color: randomColor(),
+            color: color || randomColor(),
             tx: dots[n].x,//目的地x
             ty: dots[n].y//目的地y
          };
          kl[n] = (_dots[n].ty - _dots[n].y)/(_dots[n].tx - _dots[n].x);
     }
-    var flag = false,
-        start = Date.now();
-        tick = setInterval(function(){   
+    var start = Date.now();
+    var tick = setInterval(function(){   
             ctx.clearRect(0,0,canW,canH);
             var tlen = _dots.length;
             for(var m=0;m<tlen;++m){  
@@ -479,31 +479,75 @@ function img2Pixel(mycanvas,text,size,x,y,radius){
                 ctx.arc(_dots[m].x,_dots[m].y,radius,0,Math.PI*2);
                 ctx.fillStyle = _dots[m].color ;
                 ctx.fill();             
-                if(dist(_dots[m].x,_dots[m].y,dots[m].x,dots[m].y)<=4){
+                if(dist(_dots[m].x,_dots[m].y,dots[m].x,dots[m].y)<=speed*0.6){//误差
                                
                 }else if(kl[m]>0){
-                    _dots[m].x += 5;
-                    _dots[m].y += kl[m]*5;
+                    _dots[m].x += speed;
+                    _dots[m].y += speed*kl[m];
                 }else{
-                    _dots[m].x -= 5;
-                    _dots[m].y -= 5*kl[m];
+                    _dots[m].x -= speed;
+                    _dots[m].y -= speed*kl[m];
                 }              
             } 
             var now = Date.now(),
-            delta = now - start;     
-           // console.log(delta);     
-            if(delta > 20000){
-                flag = true;
+            delta = now - start,
+            gap =  (canH*40/speed)                 
+            if(delta > gap){
+                ctx.clearRect(0,0,canW,canH);               
+                for(var i=0;i<len;++i){    
+                    ctx.beginPath();    
+                    ctx.arc(_dots[i].tx,_dots[i].ty,radius,0,Math.PI*2);
+                    ctx.fillStyle = _dots[i].color;
+                    ctx.fill();
+                }
+                _dots.splice(0,len);  
                 clearInterval(tick);
             }
-        },60);
-        if(flag){
-             for(var i=0;i<len;++i){ 
-                ctx.beginPath();    
-                ctx.arc(_dots[i].tx,_dots[i].ty,radius,0,Math.PI*2);
-                ctx.fillStyle = _dots[i].color ;
-                ctx.fill();
-             }
-        }
+        },40);       
+}
+//伪3D旋转
+function rotate(mycanvas){
+   var initialize = function () {
+		var focalLength = 250,
+			ballR = 20,
+			ballN = 20,
+			balls = [],
+			vpx = 0,
+			vpy = 0,
+			angleY = 0;
+ 
+		for (var i=0; i<ballN; i++) {
+			var ball = createBall(ballR);
+			stage.addChild(ball);
+			ball.xpos = Math.random() * 200 - 100;
+			ball.ypos = Math.random() * 200 - 100;
+			ball.zpos = Math.random() * 200 - 100;
+			balls.push(ball);
+		}
+		vpx = canvas.width/2;
+		vpy = canvas.height/2;
+ 
+		stage.addEventListener('mousemove', function (x, y) {
+			angleY = (x - vpx) * .001;
+		});
+		
+		function rotateY(ball, angleY) {
+			var cosy = Math.cos(angleY),
+				siny = Math.sin(angleY),
+				x1 = ball.xpos * cosy - ball.zpos * siny,
+				z1 = ball.zpos * cosy + ball.xpos * siny;
+			ball.xpos = x1;
+			ball.zpos = z1;
+ 
+			var scale = focalLength / (focalLength + ball.zpos);
+			ball.x = vpx + ball.xpos * scale;
+			ball.y = vpy + ball.ypos * scale;
+			ball.width = ballR*2*scale;
+		}
+ 
+		stage.onRefresh = function () { 
+			for (var i=0,ball; ball=balls[i]; i++) { rotateY(ball, angleY) ;}
+		}
+   }
 }
 //分形树
