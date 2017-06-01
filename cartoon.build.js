@@ -198,17 +198,19 @@ function updateObj(mycanvas,objArrary){
         }
     }
 }
-function drawBalls(mycanvas,objArrary){
+function drawBalls(mycanvas,objArrary,flag){//flag表示是否进行连线操作
     var len = objArrary.length,
     cxt = mycanvas.getContext('2d');
     cxt.clearRect(0,0,mycanvas.width,mycanvas.height);  
     for(var i=0;i<len;i++){
         drawParticle(mycanvas,objArrary[i].x,objArrary[i].y,objArrary[i].radius,objArrary[i].color);
-        for(var k=0;k!=i;k++){
-            if(dist(objArrary[k].x,objArrary[k].y,objArrary[i].x,objArrary[i].y)<80){
-                drawLine(mycanvas,objArrary[k].x,objArrary[k].y,objArrary[i].x,objArrary[i].y);
-            }
-        }	
+        if(flag){
+            for(var k=0;k!=i;k++){
+                if(dist(objArrary[k].x,objArrary[k].y,objArrary[i].x,objArrary[i].y)<80){
+                    drawLine(mycanvas,objArrary[k].x,objArrary[k].y,objArrary[i].x,objArrary[i].y);
+                }
+            }	
+        }
     }   
 }
 // function detect(mycanvas,event){
@@ -505,49 +507,64 @@ function img2Pixel(mycanvas,text,size,x,y,radius,speed,color){//文字，大小�
             }
         },40);       
 }
-//伪3D旋转
-function rotate(mycanvas){
-   var initialize = function () {
-		var focalLength = 250,
-			ballR = 20,
-			ballN = 20,
-			balls = [],
-			vpx = 0,
-			vpy = 0,
-			angleY = 0;
- 
-		for (var i=0; i<ballN; i++) {
-			var ball = createBall(ballR);
-			stage.addChild(ball);
-			ball.xpos = Math.random() * 200 - 100;
-			ball.ypos = Math.random() * 200 - 100;
-			ball.zpos = Math.random() * 200 - 100;
-			balls.push(ball);
-		}
-		vpx = canvas.width/2;
-		vpy = canvas.height/2;
- 
-		stage.addEventListener('mousemove', function (x, y) {
-			angleY = (x - vpx) * .001;
-		});
-		
-		function rotateY(ball, angleY) {
-			var cosy = Math.cos(angleY),
-				siny = Math.sin(angleY),
-				x1 = ball.xpos * cosy - ball.zpos * siny,
-				z1 = ball.zpos * cosy + ball.xpos * siny;
-			ball.xpos = x1;
-			ball.zpos = z1;
- 
-			var scale = focalLength / (focalLength + ball.zpos);
-			ball.x = vpx + ball.xpos * scale;
-			ball.y = vpy + ball.ypos * scale;
-			ball.width = ballR*2*scale;
-		}
- 
-		stage.onRefresh = function () { 
-			for (var i=0,ball; ball=balls[i]; i++) { rotateY(ball, angleY) ;}
-		}
-   }
+function initParticles(num,focalLength){
+    var balls = [];
+    for(var j=0;j<num;j++){
+         aBall = {
+                radius: Math.random()*2+2,
+                xpos: Math.random()*focalLength-focalLength/2,//xpos,ypos,zpos指相对中心位置偏移
+                ypos: Math.random()*focalLength-focalLength/2,
+                zpos: Math.random()*focalLength-focalLength/2,
+                color: randomColor(),
+                x:0,
+                y:0
+        };
+        balls[j] = aBall;
+    }
+    return balls;
+}
+function rotateSystem(mycanvas,num,angleX,angleY,focalLength){//粒子数量，绕X、Y轴旋转动量，景深
+    var focalLength = focalLength || 250,//focalLength表示当前焦距，一般可设为一个常量
+        num = num || 20,
+        angleY = angleY || 0.2,//旋转弧度[-2*PI,2*PI]
+        angleX = angleX || -0.1,
+        balls = initParticles(num,focalLength),//生成随机粒子
+        canW = mycanvas.width,
+        canH = mycanvas.height,
+        tempR = [];//保存点的原始半径
+		//angleY = (x - vpx) * .001;
+        for(var j=0;j<num;++j){
+            tempR[j] = balls[j].radius;
+        }	
+		var tick = setInterval( function() { 
+			for (var i=0;i<num;++i) {
+                var ball=balls[i];
+                rotateXY(mycanvas,ball,angleX,angleY,focalLength,tempR[i]);
+            }
+            drawBalls(mycanvas,balls,true);
+		},50);
+}
+//绕XY轴伪3D旋转
+function rotateXY(mycanvas,ball,angleX,angleY,focalLength,tempR){
+    var cosx = Math.cos(angleX),
+        sinx = Math.sin(angleX),
+        cosy = Math.cos(angleY),
+        siny = Math.sin(angleY),    
+        x1 = ball.xpos * cosy - ball.zpos * siny,
+        z1 = ball.zpos * cosy + ball.xpos * siny;     
+        ball.xpos = x1;
+        ball.zpos = z1;
+        y1 = ball.ypos * cosx - ball.zpos * sinx,
+        z1 = ball.zpos * cosx + ball.ypos * sinx;
+        ball.ypos = y1;
+        ball.zpos = z1;
+        cx = mycanvas.width/2,//旋转轴或点
+        cy = mycanvas.height/2;
+         if (ball.zpos > -focalLength){
+            var scale = focalLength / (focalLength + ball.zpos);
+            ball.x = cx + ball.xpos * scale;
+            ball.y = cy + ball.ypos * scale;
+            ball.radius = tempR*2*scale;
+        }
 }
 //分形树
