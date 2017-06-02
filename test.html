@@ -10,23 +10,28 @@
 </html>
 <script>
 window.onload = function(){
-    var mycanvas = document.getElementById('mycanvas');
+    var mycanvas = document.getElementById('mycanvas'),
+        cxt = mycanvas.getContext('2d');
     mycanvas.width = 1000;
     mycanvas.height = 800;
-    //drawRandomBalls(mycanvas,100);
-    //drawStar(mycanvas,200,200,30,50);
-    //drawRect(mycanvas,10,10,200,200);
-    //drawRoundRect(mycanvas,100,100,300,300,60);
-    //drawMoon(mycanvas,400,300,0.6,100);
-    //drawLand(mycanvas);
+    //以下例子可供测试
+    //drawLine(mycanvas,0,0,700,600);
+    //linkTo(mycanvas,0,0,500,500,3);
+    //Star(mycanvas,200,200,30,50);   
+    //Rect(mycanvas,10,10,200,200);
+    //Isogon(mycanvas,200,300,3,100,0);
+    //RoundRect(mycanvas,100,100,300,300,60);
+    //Moon(mycanvas,800,150,0.6,70);
+    //Land(mycanvas);
+    //drawRandomBalls(mycanvas,100,true);
 	//var circleLight = [{x:100,y:100,vx:Math.random()*5+5,vy:Math.random()*5+5,radius:70}];
     //drawSearchLight(mycanvas,circleLight);
-    //drawLine(mycanvas,0,0,700,600);
     //drawRiver(mycanvas);
-	//linkTo(mycanvas,0,0,500,500,3);
     //jetParticles(mycanvas,100,1,'gray',9,40,{x:300,y:400,radius:20});
-    //img2Pixel(mycanvas,'LOVE',200,250,300,4,8,'black');
-    //rotateSystem(mycanvas,20,0.2,-0.2,200);
+    //img2Pixel(mycanvas,'LOVE',200,250,400,4,8);
+    //rotateSystem(mycanvas,20,0.02,-0.02,250);
+    //drawTree(mycanvas,mycanvas.width / 2, mycanvas.height, 30, 200,0);
+    //draw(cxt,4,'round','#03b','orange');//笔刷
 
 }
 

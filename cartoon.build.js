@@ -44,25 +44,14 @@ function randomColor(){
        B = Math.floor(Math.random()*255);
     return 'rgb('+R+','+G+','+B+')';   
 }
-//画矩形
-function drawRect(mycanvas,x,y,width,height){
+//矩形
+function Rect(mycanvas,x,y,width,height){
     var cxt = mycanvas.getContext('2d');
     cxt.beginPath();
     cxt.rect(x,y,width,height);
-    draw(cxt,8,'round','light-blue','orange');
 }
-function drawRect2(mycanvas,x,y,width,height,lineWidth,linejoin,borderColor,fillColor){
-    var cxt = mycanvas.getContext('2d');
-    cxt.beginPath();
-    cxt.strokeStyle = borderColor || '#eee';
-    cxt.lineWidth = lineWidth || 1;
-    cxt.lineJoin = linejoin || 'round';
-    cxt.fillStyle = fillColor || "#000";
-    cxt.strokeRect(x,y,width,height);
-    cxt.fillRect(x,y,width,height);
-}
-//五角星路径
-function drawStar(mycanvas,x,y,r,R,rot){
+//五角星
+function Star(mycanvas,x,y,r,R,rot){
     var cxt = mycanvas.getContext('2d');
     var rot = rot || 0;
     cxt.beginPath();
@@ -71,7 +60,16 @@ function drawStar(mycanvas,x,y,r,R,rot){
         cxt.lineTo(x+Math.cos((54+rot+72*i)/180*Math.PI)*r,y-Math.sin((54+rot+72*i)/180*Math.PI)*r);
     }
     cxt.closePath();
-    draw(cxt,4,'round','#03b','orange');
+}
+//正多边形
+function Isogon(mycanvas,x,y,edges,r,rot){//边数,大小
+    var cxt = mycanvas.getContext('2d'),
+        inner = 360 / edges;
+        cxt.beginPath();
+    for(var i=0;i<edges;++i){
+        cxt.lineTo(x+Math.cos((rot+inner*i)/180*Math.PI)*r,y-Math.sin((rot+inner*i)/180*Math.PI)*r);
+    }
+    cxt.closePath();
 }
 function getNewmycanvas(){
     var backmycanvas = document.createElement('mycanvas');
@@ -94,20 +92,18 @@ function roundRectPath(cxt,width,height,radius){
     cxt.arc(tempW,0,radius,Math.PI*3/2,Math.PI*2);
     cxt.closePath();
 }
-function drawRoundRect(mycanvas,x,y,width,height,radius,lineWidth,linejoin,borderColor,fillColor){
+function RoundRect(mycanvas,x,y,width,height,radius){
     var cxt = mycanvas.getContext('2d');
     if(2*radius > width || 2*radius > height) return;
     cxt.beginPath();
     cxt.translate(x,y);
     roundRectPath(cxt,width,height,radius);
-    draw(cxt,lineWidth,linejoin,borderColor,fillColor);
 }//弧
-function drawArcTo(mycanvas,x0,y0,x1,y1,x2,y2,radius,lineWidth,linejoin,borderColor){
+function ArcTo(mycanvas,x0,y0,x1,y1,x2,y2,radius){
     var cxt = mycanvas.getContext('2d');
     cxt.beginPath();
     cxt.moveTo(x0,y0);
     cxt.arcTo(x1,y1,x2,y2,radius);
-    draw(cxt,lineWidth,linejoin,borderColor);
 }
 function moonPath(cxt,d){//d表示月亮弯曲程度[0,1]
     cxt.beginPath();
@@ -122,7 +118,7 @@ function moonPath2(cxt,d){//d表示月亮弯曲程度[0,1]
     cxt.closePath();
 }
 //月亮
-function drawMoon(mycanvas,x,y,d,r,rot,lineWidth,linejoin,borderColor,fillColor){
+function Moon(mycanvas,x,y,d,r,rot){
     var cxt = mycanvas.getContext('2d');
     cxt.save();
     cxt.translate(x,y);
@@ -130,9 +126,8 @@ function drawMoon(mycanvas,x,y,d,r,rot,lineWidth,linejoin,borderColor,fillColor)
     cxt.rotate(rot*Math.PI/180);
     moonPath2(cxt,d);
     cxt.restore();
-    draw(cxt,lineWidth,linejoin,borderColor,fillColor);
 }//山坡
-function drawLand(mycanvas,lineWidth,linejoin,borderColor,fillColor){
+function Land(mycanvas,lineWidth,linejoin,borderColor,fillColor){
     var cxt = mycanvas.getContext('2d');
     cxt.save();
     cxt.beginPath();
@@ -151,7 +146,7 @@ function dist(x1,y1,x2,y2){
     return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
 }
 //随机运动小球
-function drawRandomBalls(mycanvas,num){
+function drawRandomBalls(mycanvas,num,flag){
     var cxt = mycanvas.getContext('2d'),
         balls = [],
         mycanvasW = mycanvas.width,
@@ -171,7 +166,7 @@ function drawRandomBalls(mycanvas,num){
     }
     //mycanvas.addEventListener('click',detect);
     setInterval(function(){
-        drawBalls(mycanvas,balls);
+        drawBalls(mycanvas,balls,flag);
         updateObj(mycanvas,balls);
     },45);
 }
@@ -568,3 +563,34 @@ function rotateXY(mycanvas,ball,angleX,angleY,focalLength,tempR){
         }
 }
 //分形树
+function drawTree(mycanvas,startX, startY, trunkWidth,theight,level) {//起始点，树粗，树干高度，层级（茂密程度）
+    var cxt = mycanvas.getContext('2d');
+    if(level < 12) {  //分枝级数
+        var changeX = 180 /(level+1),//分枝宽度变化范围  
+        changeY = 220 /(level+1), //分枝高度变化范围
+        topRightX = startX + Math.random() * changeX,  //右分枝起始点
+        topRightY = startY -theight - Math.random() * changeY,
+        topLeftX = startX - Math.random() * changeX,  //左分枝起始点
+        topLeftY = startY -theight - Math.random() * changeY; 
+
+        //连接右分枝
+        cxt.beginPath();  
+        cxt.moveTo(startX + trunkWidth / 4, startY ); 
+        cxt.lineTo(startX , startY - theight); 
+        cxt.quadraticCurveTo(startX + trunkWidth / 4, startY - trunkWidth-theight, topRightX, topRightY);
+        cxt.lineWidth = trunkWidth*2;  
+        cxt.lineCap = 'round';  
+        cxt.stroke();
+        //连接左分枝
+        cxt.beginPath();  
+        cxt.moveTo(startX - trunkWidth / 4, startY); 
+        cxt.lineTo(startX , startY - theight);   
+        cxt.quadraticCurveTo(startX - trunkWidth / 4, startY - trunkWidth-theight, topLeftX, topLeftY);
+        cxt.lineWidth = trunkWidth*2;  
+        cxt.lineCap = 'round';  
+        cxt.stroke();
+        //递归画左右分支
+        drawTree(mycanvas,topRightX, topRightY, trunkWidth * 0.6, 0, level + 1);  
+        drawTree(mycanvas,topLeftX, topLeftY, trunkWidth * 0.6, 0, level + 1);  
+    }
+}
