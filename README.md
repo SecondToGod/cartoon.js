@@ -27,6 +27,11 @@ jetParticles(mycanvas,num,radius,color,turbulence,life,obj)
 drawTree(mycanvas,startX, startY, trunkWidth,theight,level)
 ```
 ![examples](./examples/tree.png "example4")
+
+```
+img2Pixel(mycanvas,text,size,x,y,radius,speed,color)
+```
+![examples](./examples/img2pixel.png "example5")
 ---------------------------------------------------
 ##### API文档暑期来补
 ##### 更多用法慢慢探索
