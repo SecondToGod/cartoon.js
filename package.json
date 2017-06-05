@@ -1,6 +1,6 @@
 {
   "name": "cartoon.js",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "an animation libray for your website based on canvas",
   "main": "cartoon.js",
   "scripts": {

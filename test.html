@@ -12,8 +12,8 @@
 window.onload = function(){
     var mycanvas = document.getElementById('mycanvas'),
         cxt = mycanvas.getContext('2d');
-    mycanvas.width = 1000;
-    mycanvas.height = 800;
+    mycanvas.width = 800;
+    mycanvas.height = 600;
     //以下例子可供测试
     //drawLine(mycanvas,0,0,700,600);
     //linkTo(mycanvas,0,0,500,500,3);
@@ -23,7 +23,7 @@ window.onload = function(){
     //RoundRect(mycanvas,100,100,300,300,60);
     //Moon(mycanvas,800,150,0.6,70);
     //Land(mycanvas);
-    drawRandomBalls(mycanvas,100,true);
+    //drawRandomBalls(mycanvas,100,true);
 	//var circleLight = [{x:100,y:100,vx:Math.random()*5+5,vy:Math.random()*5+5,radius:70}];
     //drawSearchLight(mycanvas,circleLight);
     //drawRiver(mycanvas);
@@ -31,6 +31,7 @@ window.onload = function(){
     //img2Pixel(mycanvas,'LOVE',200,250,400,4,8);
     //rotateSystem(mycanvas,20,0.02,-0.02,250);
     //drawTree(mycanvas,mycanvas.width / 2, mycanvas.height, 30, 200,0);
+	drawStarSky(mycanvas,30,'gray');
     //draw(cxt,4,'round','#03b','orange');//笔刷
 
 }

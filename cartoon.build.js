@@ -248,9 +248,8 @@ function drawSearchLight(mycanvas,light){
     },40);
 }
 //星空
-function drawStarSky(){
-    var can,ctx,canW,canH,
-    girl = new Image(),
+function drawStarSky(mycanvas,num,background){//数量，背景
+    var canW,canH,
     star = new Image(),
     //定义星星对象
     starObj = function(){
@@ -259,7 +258,7 @@ function drawStarSky(){
         this.frame;
         this.gap;
     },
-    num = 50,
+    num = num || 50,
     stars = [],
     gapTime,lastTime;
     starObj.prototype.init = function(){
@@ -280,12 +279,10 @@ function drawStarSky(){
         ctx.drawImage(star,this.frame*7,0,7,7,this.x,this.y,7,7);
     }
     function init(){
-        can = document.getElementById('mycanvas');
-        ctx = can.getContext('2d');
-        canW = can.width;
-        canH = can.height;
-        girl.src = 'src/girl.jpg';
-        star.src = 'src/star.png';
+        ctx = mycanvas.getContext('2d');
+        canW = mycanvas.width;
+        canH = mycanvas.height;
+        star.src = './examples/star.png';
         for(var i=0;i<num;i++){
             var obj = new starObj();
             obj.init();
@@ -293,9 +290,6 @@ function drawStarSky(){
         }
         lastTime = Date.now();
         frameLoop();
-        /*setInterval(function(){
-            frameLoop();
-        },250);*/
     }
     function frameLoop(){
         window.requestAnimationFrame(frameLoop);
@@ -306,13 +300,13 @@ function drawStarSky(){
         drawStars();
     }
     function drawBackgroud(){
-        ctx.fillStyle ='black';
+        ctx.fillStyle = background || 'black';
         ctx.fillRect(0,0,canW,canH);
     }
     //处理序列帧图片
-    function drawObj(obj,sx,sy,sWidth,sHeight,x,y,width,height){
-        ctx.drawImage(obj,x,y,width,height);
-    }
+    //function drawObj(obj,sx,sy,sWidth,sHeight,x,y,width,height){
+       // ctx.drawImage(obj,x,y,width,height);
+    //}
     function drawStars(){
         for(var i=0;i<num;++i){
             stars[i].anime();
