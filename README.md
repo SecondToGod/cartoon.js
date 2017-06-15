@@ -5,7 +5,7 @@ cartoon.js是一个基于Web和Html5的图形动画库，去框架化，功能�
 
 ```
 #install
-npm install cartoon
+npm install cartoon.js
 在页面中引入cartoon.min.js文件
 ```
 ```
@@ -14,9 +14,9 @@ drawRandomCircles(mycanvas,num)
 ```
 ![examples](./examples/randomCircles.png "example1") 
 ```
-drawSearchLight(mycanvas,light)
+img2Pixel(mycanvas,text,size,x,y,radius,speed,color)
 ```
-![examples](./examples/searchlight.png "example2")
+![examples](./examples/img2pixel.png "example2")
 
 ```
 jetParticles(mycanvas,num,radius,color,turbulence,life,obj)
@@ -27,14 +27,17 @@ jetParticles(mycanvas,num,radius,color,turbulence,life,obj)
 drawTree(mycanvas,startX, startY, trunkWidth,theight,level)
 ```
 ![examples](./examples/tree.png "example4")
-
 ```
-img2Pixel(mycanvas,text,size,x,y,radius,speed,color)
+drawStarSky(mycanvas,num,background);
 ```
-![examples](./examples/img2pixel.png "example5")
+![examples](./examples/starsky.png "example5")
+```
+drawSearchLight(mycanvas,light)
+```
+![examples](./examples/searchlight.png "example6")
 ---------------------------------------------------
-##### API文档暑期来补
-##### 更多用法慢慢探索
+##### API文档后期补上
+
 
 developer:</br>
 	_Chinese Academy Of Sciences:</br>_
