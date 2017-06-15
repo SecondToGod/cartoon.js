@@ -594,3 +594,4 @@ function drawTree(mycanvas,startX, startY, trunkWidth,theight,level) {//起始�
         drawTree(mycanvas,topLeftX, topLeftY, trunkWidth * 0.6, 0, level + 1);  
     }
 }
+//粒子拖尾残影效果
