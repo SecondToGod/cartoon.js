@@ -198,11 +198,13 @@ function drawBalls(mycanvas,objArrary,flag){//flag表示是否进行连线操作
     cxt = mycanvas.getContext('2d');
     cxt.clearRect(0,0,mycanvas.width,mycanvas.height);  
     for(var i=0;i<len;i++){
-        drawParticle(mycanvas,objArrary[i].x,objArrary[i].y,objArrary[i].radius,objArrary[i].color);
+        var temp = objArrary[i];
+        drawParticle(mycanvas,temp.x,temp.y,temp.radius,temp.color);
         if(flag){
             for(var k=0;k!=i;k++){
-                if(dist(objArrary[k].x,objArrary[k].y,objArrary[i].x,objArrary[i].y)<80){
-                    drawLine(mycanvas,objArrary[k].x,objArrary[k].y,objArrary[i].x,objArrary[i].y);
+                var tmp = objArrary[k];
+                if(dist(tmp.x,tmp.y,temp.x,temp.y)<80){
+                    drawLine(mycanvas,tmp.x,tmp.y,temp.x,temp.y);
                 }
             }	
         }
@@ -360,7 +362,7 @@ function updateParticles(particles,obj,radius,turbulence,life){
         temp.x += temp.vx;
         temp.y += temp.vy;
         temp.life -= 1;
-        temp.radius = (temp.radius>2)?(temp.radius-=0.4):3;
+        temp.radius = (temp.radius>2)?(temp.radius-=0.4):2;
         //加速度
         // temp.vy -= temp.vy*0.1;
         // temp.vx -= temp.vx*0.1;
@@ -399,7 +401,7 @@ function jetParticles(mycanvas,num,radius,color,turbulence,life,obj){
         mycanvasH = mycanvas.height;
         obj.vx = 5;
         obj.vy = 3;
-        objArrary = [obj];
+        objArrary = [obj];//产生粒子的对象
         //ctx.globalCompositeOperation = 'xor';
         particleSystem(obj,particles,num,radius,color,turbulence,life);
     var tock = setInterval(function(){
@@ -407,7 +409,8 @@ function jetParticles(mycanvas,num,radius,color,turbulence,life,obj){
         drawParticle(ctx,obj.x,obj.y,obj.radius,color);
         updateObj(mycanvas,objArrary);
         for(var i=0;i<num;++i){
-            drawParticle(ctx,particles[i].x,particles[i].y,particles[i].radius,color);
+            var temp  = particles[i];
+            drawParticle(ctx,temp.x,temp.y,temp.radius,color);
         }
         updateParticles(particles,obj,radius,turbulence,life);
     },60);
@@ -557,29 +560,29 @@ function rotateXY(mycanvas,ball,angleX,angleY,focalLength,tempR){
         }
 }
 //分形树
-function drawTree(mycanvas,startX, startY, trunkWidth,theight,level) {//起始点，树粗，树干高度，层级（茂密程度）
+function drawTree(mycanvas,startX, startY, trunkWidth,trunkHeight,level) {//起始点，树粗，树干高度，层级（茂密程度）
     var cxt = mycanvas.getContext('2d');
     if(level < 12) {  //分枝级数
         var changeX = 180 /(level+1),//分枝宽度变化范围  
         changeY = 220 /(level+1), //分枝高度变化范围
         topRightX = startX + Math.random() * changeX,  //右分枝起始点
-        topRightY = startY -theight - Math.random() * changeY,
+        topRightY = startY -trunkHeight - Math.random() * changeY,
         topLeftX = startX - Math.random() * changeX,  //左分枝起始点
-        topLeftY = startY -theight - Math.random() * changeY; 
+        topLeftY = startY -trunkHeight - Math.random() * changeY; 
 
         //连接右分枝
         cxt.beginPath();  
         cxt.moveTo(startX + trunkWidth / 4, startY ); 
-        cxt.lineTo(startX , startY - theight); 
-        cxt.quadraticCurveTo(startX + trunkWidth / 4, startY - trunkWidth-theight, topRightX, topRightY);
+        cxt.lineTo(startX , startY - trunkHeight); 
+        cxt.quadraticCurveTo(startX + trunkWidth / 4, startY - trunkWidth-trunkHeight, topRightX, topRightY);
         cxt.lineWidth = trunkWidth*2;  
         cxt.lineCap = 'round';  
         cxt.stroke();
         //连接左分枝
         cxt.beginPath();  
         cxt.moveTo(startX - trunkWidth / 4, startY); 
-        cxt.lineTo(startX , startY - theight);   
-        cxt.quadraticCurveTo(startX - trunkWidth / 4, startY - trunkWidth-theight, topLeftX, topLeftY);
+        cxt.lineTo(startX , startY - trunkHeight);   
+        cxt.quadraticCurveTo(startX - trunkWidth / 4, startY - trunkWidth-trunkHeight, topLeftX, topLeftY);
         cxt.lineWidth = trunkWidth*2;  
         cxt.lineCap = 'round';  
         cxt.stroke();
@@ -588,4 +591,15 @@ function drawTree(mycanvas,startX, startY, trunkWidth,theight,level) {//起始�
         drawTree(mycanvas,topLeftX, topLeftY, trunkWidth * 0.6, 0, level + 1);  
     }
 }
-//粒子拖尾残影效果
+//一些运动数学函数
+function quaHermite(p1,p2,p3,t){//二次Hermite插值三个参照点
+    var p = {};
+        p.x = Math.pow(1-t,2)*p1.x + 2*t*(1-t)*p2.x + t*t*p3.x;
+        p.y = Math.pow(1-t,2)*p1.y + 2*t*(1-t)*p2.y + t*t*p3.y;
+}
+function triHermite(p1,p2,p3,p4,t){//三次Hermite插值四个参照点
+    var p = {};
+        p.x = Math.pow(1-t,3)*(p1.x) + 3*t*Math.pow(1-t,2)*(p2.x) +3*Math.pow(t,2)*(1-t)*(p3.x)+t*t*t*(p4.x);
+        p.y = Math.pow(1-t,3)*(p1.y) + 3*t*Math.pow(1-t,2)*(p2.y) +3*Math.pow(t,2)*(1-t)*(p3.y)+t*t*t*(p4.y);
+}
+//粒子拖尾效果
