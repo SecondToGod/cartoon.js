@@ -591,7 +591,7 @@ function drawTree(mycanvas,startX, startY, trunkWidth,trunkHeight,level) {//起�
         drawTree(mycanvas,topLeftX, topLeftY, trunkWidth * 0.6, 0, level + 1);  
     }
 }
-//一些运动数学函数
+//插值函数
 function quaHermite(p1,p2,p3,t){//二次Hermite插值三个参照点
     var p = {};
         p.x = Math.pow(1-t,2)*p1.x + 2*t*(1-t)*p2.x + t*t*p3.x;
@@ -602,4 +602,23 @@ function triHermite(p1,p2,p3,p4,t){//三次Hermite插值四个参照点
         p.x = Math.pow(1-t,3)*(p1.x) + 3*t*Math.pow(1-t,2)*(p2.x) +3*Math.pow(t,2)*(1-t)*(p3.x)+t*t*t*(p4.x);
         p.y = Math.pow(1-t,3)*(p1.y) + 3*t*Math.pow(1-t,2)*(p2.y) +3*Math.pow(t,2)*(1-t)*(p3.y)+t*t*t*(p4.y);
 }
-//粒子拖尾效果
+//分形闪电
+function drawLightning(mycanvas,x1,y1,x2,y2,distance,detail){
+    var ctx = mycanvas.getContext('2d');
+    if(distance < detail) {
+        ctx.moveTo(x1,y1);
+        ctx.lineTo(x2,y2);
+        ctx.strokeStyle = 'navy';
+        ctx.lineWidth = 2 ;
+        ctx.stroke();
+    }
+    else{
+        var mid_x = (x2+x1)/2;
+        var mid_y = (y2+y1)/2;
+        mid_x += (Math.random()-.5)*distance;
+        mid_y += (Math.random()-.5)*distance;
+        drawLightning(mycanvas,x1,y1,mid_x,mid_y,distance/2,detail);
+        drawLightning(mycanvas,x2,y2,mid_x,mid_y,distance/2,detail);
+    }
+}
+//粒子拖尾
