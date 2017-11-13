@@ -12,31 +12,35 @@ npm install cartoon.js
 #use
 drawRandomCircles(mycanvas,num)
 ```
-![examples](./examples/randomCircles.png "example1") 
+![examples](./examples/randomCircles.gif "example1") 
 ```
 img2Pixel(mycanvas,text,size,x,y,radius,speed,color)
 ```
-![examples](./examples/img2pixel.png "example2")
+![examples](./examples/img2pixel.gif "example2")
 
 ```
 jetParticles(mycanvas,num,radius,color,turbulence,life,obj)
 ```
-![examples](./examples/particles.png "example3")
-
+![examples](./examples/particles.gif "example3")
 ```
-drawTree(mycanvas,startX, startY, trunkWidth,theight,level)
+rotateSystem
 ```
-![examples](./examples/tree.png "example4")
+![examples](./examples/rotateSystem.gif "example4")
 ```
 drawStarSky(mycanvas,num,background);
 ```
-![examples](./examples/starsky.png "example5")
+![examples](./examples/starsky.gif "example5")
 ```
 drawSearchLight(mycanvas,light)
 ```
-![examples](./examples/searchlight.png "example6")
+![examples](./examples/searchlight.gif "example6")
+```
+drawTree(mycanvas,startX, startY, trunkWidth,theight,level)
+```
+![examples](./examples/tree.png "example7")
+
 ---------------------------------------------------
-##### API文档后期补上
+##### API在代码中自己找吧
 
 
 developer:</br>
