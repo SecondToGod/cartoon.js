@@ -16,7 +16,7 @@ drawRandomCircles(mycanvas,num)
 ```
 img2Pixel(mycanvas,text,size,x,y,radius,speed,color)
 ```
-![examples](./examples/img2pixel.gif "example2")
+![examples](./examples/img2Pixel.gif "example2")
 
 ```
 jetParticles(mycanvas,num,radius,color,turbulence,life,obj)
@@ -40,7 +40,7 @@ drawTree(mycanvas,startX, startY, trunkWidth,theight,level)
 ![examples](./examples/tree.png "example7")
 
 ---------------------------------------------------
-##### API在代码中自己找吧
+##### API见test.html
 
 
 developer:</br>

@@ -462,7 +462,7 @@ function img2Pixel(mycanvas,text,size,x,y,radius,speed,color){//文字，大小�
             tx: dots[n].x,//目的地x
             ty: dots[n].y//目的地y
          };
-         kl[n] = (_dots[n].ty - _dots[n].y)/(_dots[n].tx - _dots[n].x);
+        kl[n] = (_dots[n].ty - _dots[n].y)/(_dots[n].tx - _dots[n].x);
     }
     var start = Date.now();
     var tick = setInterval(function(){   
@@ -621,4 +621,40 @@ function drawLightning(mycanvas,x1,y1,x2,y2,distance,detail){
         drawLightning(mycanvas,x2,y2,mid_x,mid_y,distance/2,detail);
     }
 }
-//粒子拖尾
+//拖尾线条
+function drawBezierLine(mycanvas){
+    var ctx = mycanvas.getContext('2d'),
+        canW = mycanvas.width,
+        canH = mycanvas.height;
+    var lastX = canW * Math.random(),
+        lastY = canH * Math.random(),
+        hue = 0;    
+    ctx.save();
+    ctx.translate(canW/2,canH/2);
+    ctx.scale(0.9,0.9);
+    ctx.translate(-canW/2,-canH/2);
+    ctx.beginPath();
+    ctx.lineWidth = 5 + Math.random() * 10;
+    ctx.moveTo(lastX,lastY);
+    lastX = canW * Math.random();
+    lastY = canH * Math.random();
+    lastXX = canW * Math.random();
+    lastYY = canH * Math.random();
+    ctx.bezierCurveTo(lastXX,lastYY,lastXX + 100,lastYY + 100,lastX,lastY);
+    hue = hue + 10 * Math.random();
+    ctx.strokeStyle = 'hsl(' + hue + ', 50%, 50%)';
+    ctx.shadowColor = 'white';
+    ctx.shadowBlur = 10;
+    ctx.stroke();
+    ctx.restore();
+}
+function drawRandomBezierLines(mycanvas){
+    var ctx = mycanvas.getContext('2d');
+    var tick = setInterval(function(){
+        drawBezierLine(mycanvas)
+    },80);
+    var tock = setInterval(function(){
+        ctx.fillStyle = 'rgba(0,0,0,0.1)';
+        ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
+    },80);
+}
