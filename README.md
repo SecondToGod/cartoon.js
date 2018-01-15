@@ -4,7 +4,7 @@ cartoon.js是一个基于Web和Html5的图形动画库，去框架化，功能�
 </br>
 
 ```
-#install
+## install
 npm install cartoon.js
 在页面中引入cartoon.min.js文件
 ```
@@ -40,7 +40,7 @@ drawTree(mycanvas,startX, startY, trunkWidth,theight,level)
 ![examples](./examples/tree.png "example7")
 
 ---------------------------------------------------
-##### API见test.html
+##### More APIs can be referenced from test.html
 
 
 developer:</br>
