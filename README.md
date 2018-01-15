@@ -8,8 +8,8 @@ cartoon.js是一个基于Web和Html5的图形动画库，去框架化，功能�
 npm install cartoon.js
 在页面中引入cartoon.min.js文件
 ```
+### use
 ```
-#use
 drawRandomCircles(mycanvas,num)
 ```
 ![examples](./examples/randomCircles.gif "example1") 
