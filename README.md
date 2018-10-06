@@ -42,9 +42,3 @@ drawTree(mycanvas,startX, startY, trunkWidth,theight,level)
 ---------------------------------------------------
 ##### More APIs can be referenced from test.html
 
-
-developer:</br>
-	_Chinese Academy Of Sciences:</br>_
-	**朱京乔**</br>
-	_Communication University Of China:</br>_
-	**邱锐**</br>
